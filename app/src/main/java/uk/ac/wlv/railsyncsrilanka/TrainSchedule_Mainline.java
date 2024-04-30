@@ -23,7 +23,7 @@ import uk.ac.wlv.railsyncsrilanka.model.StationModel;
 
 public class TrainSchedule_Mainline extends AppCompatActivity {
 
-    String[] items = {"Colombo","Kandy","Nanu Oya","Ella","Badulla"};
+    String[] items = {""};
     AutoCompleteTextView autoCompleteTxt,autoCompleteTxt2;
     ArrayAdapter<String> adapterItems,adapterItems2;
 
@@ -44,23 +44,27 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
 
 
         myApiCall=retrofitClient.create(MyApiCall.class);
-        Call<ArrayList<StationModel>> call = myApiCall.getStationsByLine();
+        Call<ArrayList<StationModel>> call = myApiCall.getStationsByLine(line);
 
         call.enqueue(new Callback<ArrayList<StationModel>>() {
             @Override
             public void onResponse(Call<ArrayList<StationModel>> call, Response<ArrayList<StationModel>> response) {
                 stationModels=response.body();
 
-//                for (int i = 0; i < stationModels.size(); i++) {
-//                    // Get the current StationItem object
-//                    StationModel stationModel = stationModels.get(i);
-//                    // Extract the name and store it in the array
-//                    items[i] = stationModel.getName();
-//                }
+                for (int i = 0; i < stationModels.size(); i++) {
+                    // Get the current StationItem object
+                    StationModel stationModel = stationModels.get(i);
+                    // Extract the name and store it in the array
+                    items[i] = stationModel.getName();
+                }
 
                 autoCompleteTxt = findViewById(R.id.ACT1);
                 adapterItems = new ArrayAdapter<String>(TrainSchedule_Mainline.this, R.layout.list_item,items);
                 autoCompleteTxt.setAdapter(adapterItems);
+
+                autoCompleteTxt2 = findViewById(R.id.ACT2);
+                adapterItems2 = new ArrayAdapter<String>(TrainSchedule_Mainline.this, R.layout.list_item,items);
+                autoCompleteTxt2.setAdapter(adapterItems2);
             }
 
             @Override
@@ -83,17 +87,15 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
 //            }
 //        });
 
-        autoCompleteTxt2 = findViewById(R.id.ACT2);
-        adapterItems2 = new ArrayAdapter<String>(this, R.layout.list_item,items);
-        autoCompleteTxt2.setAdapter(adapterItems2);
-        autoCompleteTxt2.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(getApplicationContext(),"Item:"+item,Toast.LENGTH_SHORT).show();
-
-            }
-        });
+//
+//        autoCompleteTxt2.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String item = parent.getItemAtPosition(position).toString();
+//                Toast.makeText(getApplicationContext(),"Item:"+item,Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
 
         //Buttons

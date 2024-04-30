@@ -9,7 +9,8 @@ import retrofit2.http.POST;
 import uk.ac.wlv.railsyncsrilanka.model.StationModel;
 
 public interface MyApiCall {
-//    @FormUrlEncoded
+    @FormUrlEncoded
     @POST("getLineStations.php")
-    Call<ArrayList<StationModel>> getStationsByLine();
+    Call<ArrayList<StationModel>> getStationsByLine(@Field("line") String line);
+
 }
