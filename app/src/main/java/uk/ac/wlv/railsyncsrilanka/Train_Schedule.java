@@ -33,6 +33,7 @@ public class Train_Schedule extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Train_Schedule.this, TrainSchedule_Mainline.class);
+                intent.putExtra("line","1");
                 startActivity(intent);
             }
         });
