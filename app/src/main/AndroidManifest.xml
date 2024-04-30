@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.RailSynCSriLanka"
+        tools:targetApi="31">
+        <activity
+            android:name=".TrainSchedule_Mainline"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.MainLine.Normal_Ticket_Price_KANDY2BADULLA"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.MainLine.Kandy_Badulla_1126"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.Kelani_Line"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.Coast_Line"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.Eastern_Line"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.Northern_Line"
+            android:exported="false" />
+        <activity
+            android:name=".SeatBooking.MainLine.Main_Line"
+            android:exported="false" />
+        <activity
+            android:name=".Train_Alerts"
+            android:exported="false" />
+        <activity
+            android:name=".About_Us"
+            android:exported="false" />
+        <activity
+            android:name=".Railway_Security"
+            android:exported="false" />
+        <activity
+            android:name=".News_Feed"
+            android:exported="false" />
+        <activity
+            android:name=".Ticket_Pricing"
+            android:exported="false" />
+        <activity
+            android:name=".Splash_Screen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SeatBooking.Seat_Booking"
+            android:exported="false" />
+        <activity
+            android:name=".Train_Schedule"
+            android:exported="false" />
+        <activity
+            android:name=".Live_Location"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="Home" />
+    </application>
+
+</manifest>
