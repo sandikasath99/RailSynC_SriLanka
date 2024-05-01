@@ -54,10 +54,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="Main Line Train Schedule"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
-                        android:textSize="17dp"
-                        android:text="Main Line Train Schedule" />
+                        android:textSize="17dp" />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -75,16 +75,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/lato_black"
-                android:textColor="@color/white"
-                android:text="START STATION" />
+                android:text="START STATION"
+                android:textColor="@color/white" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:hint="@string/select"
-                app:hintTextColor="@color/white"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                app:hintTextColor="@color/white">
+
                 <AutoCompleteTextView
                     android:id="@+id/ACT1"
                     android:layout_width="match_parent"
@@ -105,22 +106,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/lato_black"
-                android:textColor="@color/white"
-                android:text="END STATION" />
+                android:text="END STATION"
+                android:textColor="@color/white" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:hint="@string/select2"
-                app:hintTextColor="@color/white"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                app:hintTextColor="@color/white">
+
                 <AutoCompleteTextView
                     android:id="@+id/ACT2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_black"
+                android:text="Date"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/idTVSelectedDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/idBtnPickDate"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Date"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/idBtnPickDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:text="Select Date"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:text="Search"
+                android:textAllCaps="false" />
+
 
         </LinearLayout>
 

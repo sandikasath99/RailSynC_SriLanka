@@ -3,15 +3,20 @@ package uk.ac.wlv.railsyncsrilanka;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,8 +34,10 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
 
     private MyApiCall myApiCall;
     public CardView back;
-
     private ArrayList<StationModel> stationModels;
+
+    private Button pickDateBtn;
+    private TextView selectedDateTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,9 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<StationModel>> call, Response<ArrayList<StationModel>> response) {
                 stationModels=response.body();
+
+                // Initialize the items array
+                String[] items = new String[stationModels.size()];
 
                 for (int i = 0; i < stationModels.size(); i++) {
                     // Get the current StationItem object
@@ -96,6 +106,47 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
 //
 //            }
 //        });
+
+
+        // on below line we are initializing our variables.
+        pickDateBtn = findViewById(R.id.idBtnPickDate);
+        selectedDateTV = findViewById(R.id.idTVSelectedDate);
+
+        // on below line we are adding click listener for our pick date button
+        pickDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // on below line we are getting
+                // the instance of our calendar.
+                final Calendar c = Calendar.getInstance();
+
+                // on below line we are getting
+                // our day, month and year.
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // on below line we are creating a variable for date picker dialog.
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        // on below line we are passing context.
+                        TrainSchedule_Mainline.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // on below line we are setting date to our text view.
+                                selectedDateTV.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                            }
+                        },
+                        // on below line we are passing year,
+                        // month and day for selected date in our date picker.
+                        year, month, day);
+                // at last we are calling show to
+                // display our date picker dialog.
+                datePickerDialog.show();
+            }
+        });
 
 
         //Buttons
