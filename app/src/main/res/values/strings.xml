@@ -2,4 +2,6 @@
     <string name="app_name">RailSynC SriLanka</string>
     <string name="select">Select_Start_Station</string>
     <string name="select2">Select_End_Station</string>
+    <string name="select3">Select a Station</string>
+    <string name="select4">Select a Station</string>
 </resources>
