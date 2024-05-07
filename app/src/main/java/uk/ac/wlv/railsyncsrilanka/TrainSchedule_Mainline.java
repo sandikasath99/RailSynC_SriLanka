@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +37,10 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
     public CardView back;
     private ArrayList<StationModel> stationModels;
 
-    private Button pickDateBtn;
+    private Button pickDateBtn, searchBtn;
     private TextView selectedDateTV;
+
+    private String startStation,endStation,date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,11 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
         setContentView(R.layout.activity_train_schedule_mainline);
 
         String line = getIntent().getExtras().getString("line");
-        Toast.makeText(this, line, Toast.LENGTH_SHORT).show();
 
         Retrofit retrofitClient = RetrofitClient.getClient();
 
+        autoCompleteTxt = findViewById(R.id.ACT1);
+        autoCompleteTxt2 = findViewById(R.id.ACT2);
 
         myApiCall=retrofitClient.create(MyApiCall.class);
         Call<ArrayList<StationModel>> call = myApiCall.getStationsByLine(line);
@@ -68,11 +72,10 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
                     items[i] = stationModel.getName();
                 }
 
-                autoCompleteTxt = findViewById(R.id.ACT1);
+
                 adapterItems = new ArrayAdapter<String>(TrainSchedule_Mainline.this, R.layout.list_item,items);
                 autoCompleteTxt.setAdapter(adapterItems);
 
-                autoCompleteTxt2 = findViewById(R.id.ACT2);
                 adapterItems2 = new ArrayAdapter<String>(TrainSchedule_Mainline.this, R.layout.list_item,items);
                 autoCompleteTxt2.setAdapter(adapterItems2);
             }
@@ -85,27 +88,22 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
         });
         //
 
-//        autoCompleteTxt = findViewById(R.id.ACT1);
-//        adapterItems = new ArrayAdapter<String>(this,R.layout.list_item,items);
-//        autoCompleteTxt.setAdapter(adapterItems);
-//        autoCompleteTxt.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String item = parent.getItemAtPosition(position).toString();
-//                Toast.makeText(getApplicationContext(),"Item:"+item,Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
+        autoCompleteTxt.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                startStation = item;
+            }
+        });
 
-//
-//        autoCompleteTxt2.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String item = parent.getItemAtPosition(position).toString();
-//                Toast.makeText(getApplicationContext(),"Item:"+item,Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
+        autoCompleteTxt2.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                endStation = item;
+
+            }
+        });
 
 
         // on below line we are initializing our variables.
@@ -135,7 +133,9 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // on below line we are setting date to our text view.
-                                selectedDateTV.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+//                                selectedDateTV.setText(year + "-" + (monthOfYear + 1) + "- " + dayOfMonth);
+                                selectedDateTV.setText(String.format(Locale.getDefault(), "%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth));
+                                date = selectedDateTV.getText().toString();
 
                             }
                         },
@@ -145,6 +145,29 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
                 // at last we are calling show to
                 // display our date picker dialog.
                 datePickerDialog.show();
+            }
+        });
+
+        searchBtn = findViewById(R.id.search);
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(startStation==null){
+                    Toast.makeText(TrainSchedule_Mainline.this, "Please Select Start Station", Toast.LENGTH_SHORT).show();
+                }else if (endStation==null){
+                    Toast.makeText(TrainSchedule_Mainline.this, "Please Select End Station", Toast.LENGTH_SHORT).show();
+                }else if(date==null){
+                    Toast.makeText(TrainSchedule_Mainline.this, "Please Select Date", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(TrainSchedule_Mainline.this, Search_Train_Shedule.class);
+                    intent.putExtra("startStation",startStation);
+                    intent.putExtra("endStation",endStation);
+                    intent.putExtra("date",date);
+                    startActivity(intent);
+                }
+
             }
         });
 

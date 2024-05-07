@@ -8,7 +8,7 @@
     tools:context=".Search_Train_Shedule">
 
     <TextView
-        android:id="@+id/textView245"
+        android:id="@+id/stationsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -28,88 +28,30 @@
         android:text="on"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView245"
-        app:layout_constraintStart_toEndOf="@+id/textView245"
-        app:layout_constraintTop_toTopOf="@+id/textView245"
+        app:layout_constraintBottom_toBottomOf="@+id/stationsName"
+        app:layout_constraintStart_toEndOf="@+id/stationsName"
+        app:layout_constraintTop_toTopOf="@+id/stationsName"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="2024-05-02"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView245"
-        app:layout_constraintStart_toEndOf="@+id/textView246"
-        app:layout_constraintTop_toTopOf="@+id/textView245"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="@+id/stationsName"
+        app:layout_constraintTop_toBottomOf="@+id/stationsName" />
 
-    <androidx.cardview.widget.CardView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchTrains"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:cardCornerRadius="15dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView245"
-        app:layout_constraintTop_toBottomOf="@+id/textView245">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView247"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Ruhunu Kumari"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/startStation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Kandy"
-                app:layout_constraintStart_toStartOf="@+id/textView247"
-                app:layout_constraintTop_toBottomOf="@+id/textView247" />
-
-            <TextView
-                android:id="@+id/startTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="10:00:00"
-                app:layout_constraintBottom_toBottomOf="@+id/startStation"
-                app:layout_constraintStart_toEndOf="@+id/startStation"
-                app:layout_constraintTop_toTopOf="@+id/startStation" />
-
-            <TextView
-                android:id="@+id/endTime"
-                android:layout_width="wrap_content"
-                android:layout_height="19dp"
-                android:text="18:30:00"
-                app:layout_constraintBottom_toBottomOf="@+id/endStation"
-                app:layout_constraintStart_toStartOf="@+id/startTime"
-                app:layout_constraintTop_toTopOf="@+id/endStation" />
-
-            <TextView
-                android:id="@+id/endStation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Badulla"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/startStation"
-                app:layout_constraintTop_toBottomOf="@+id/startStation" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 </androidx.constraintlayout.widget.ConstraintLayout>
