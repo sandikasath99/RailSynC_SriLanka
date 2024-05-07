@@ -34,11 +34,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="To"
-        app:layout_constraintStart_toStartOf="@+id/textView250"
-        app:layout_constraintTop_toBottomOf="@+id/textView250" />
+        app:layout_constraintStart_toStartOf="@+id/from"
+        app:layout_constraintTop_toBottomOf="@+id/from" />
 
     <TextView
-        android:id="@+id/textView250"
+        android:id="@+id/from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView247" />
 
     <TextView
-        android:id="@+id/textView251"
+        android:id="@+id/to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -66,8 +66,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView251"
-        app:layout_constraintTop_toBottomOf="@+id/textView251">
+        app:layout_constraintStart_toStartOf="@+id/to"
+        app:layout_constraintTop_toBottomOf="@+id/to">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView255"
+                android:id="@+id/price1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -116,15 +116,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView254"
+                android:id="@+id/price2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rs. 200.00"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView255"
+                app:layout_constraintBottom_toBottomOf="@+id/price1"
                 app:layout_constraintEnd_toEndOf="@+id/textView256"
-                app:layout_constraintTop_toTopOf="@+id/textView255" />
+                app:layout_constraintTop_toTopOf="@+id/price1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -174,7 +174,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView255"
+                android:id="@+id/price3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -185,15 +185,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView254"
+                android:id="@+id/price4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Rs. 200.00"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView255"
+                app:layout_constraintBottom_toBottomOf="@+id/price1"
                 app:layout_constraintEnd_toEndOf="@+id/textView256"
-                app:layout_constraintTop_toTopOf="@+id/textView255" />
+                app:layout_constraintTop_toBottomOf="@+id/textView256" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -244,7 +245,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView255"
+                android:id="@+id/price5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -255,15 +256,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView254"
+                android:id="@+id/price6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Rs. 200.00"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView255"
+                app:layout_constraintBottom_toBottomOf="@+id/price1"
                 app:layout_constraintEnd_toEndOf="@+id/textView256"
-                app:layout_constraintTop_toTopOf="@+id/textView255" />
+                app:layout_constraintTop_toBottomOf="@+id/textView256" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -312,7 +314,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView255"
+                android:id="@+id/price7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -323,15 +325,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView253" />
 
             <TextView
-                android:id="@+id/textView254"
+                android:id="@+id/price8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="Rs. 200.00"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView255"
+                app:layout_constraintBottom_toBottomOf="@+id/price1"
                 app:layout_constraintEnd_toEndOf="@+id/textView256"
-                app:layout_constraintTop_toTopOf="@+id/textView255" />
+                app:layout_constraintTop_toBottomOf="@+id/textView256"
+                app:layout_constraintVertical_bias="1.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

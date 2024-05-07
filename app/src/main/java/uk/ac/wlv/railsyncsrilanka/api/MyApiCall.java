@@ -8,6 +8,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import uk.ac.wlv.railsyncsrilanka.model.StationModel;
+import uk.ac.wlv.railsyncsrilanka.model.TicketPriceModel;
 import uk.ac.wlv.railsyncsrilanka.model.TrainScheduleModel;
 
 public interface MyApiCall {
@@ -22,4 +23,7 @@ public interface MyApiCall {
     @GET("getStations.php")
     Call<ArrayList<StationModel>> getStations();
 
+    @FormUrlEncoded
+    @POST("getTicketPrices.php")
+    Call<ArrayList<TicketPriceModel>> getTicketPrice(@Field("from") String from, @Field("to") String to);
 }
