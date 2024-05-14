@@ -5,11 +5,13 @@ public class NewsModel {
     private String id;
     private String title;
     private String description;
+    private String img_path;
 
-    public NewsModel(String id, String title, String description) {
+    public NewsModel(String id, String title, String description, String img_path) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.img_path = img_path;
     }
 
     public String getId() {
@@ -34,5 +36,13 @@ public class NewsModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImg_path() {
+        return img_path;
+    }
+
+    public void setImg_path(String img_path) {
+        this.img_path = img_path;
     }
 }
