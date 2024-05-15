@@ -1,6 +1,7 @@
 package uk.ac.wlv.railsyncsrilanka;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,12 +29,23 @@ public class Ticket_Pricing extends AppCompatActivity {
     ArrayAdapter<String> adapterItems,adapterItems2;
 
     private String startStation,endStation;
+    private CardView back;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_pricing);
+
+
+        back=findViewById(R.id.BKFMLSTTC);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Ticket_Pricing.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Retrofit retrofitClient = RetrofitClient.getClient();
 

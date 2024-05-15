@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ViewTicketPricing">
 
+
     <TextView
         android:id="@+id/textView245"
         android:layout_width="wrap_content"
