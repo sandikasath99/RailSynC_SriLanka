@@ -50,12 +50,14 @@ public class News_View extends AppCompatActivity {
        BASE_URL = RetrofitClient.getBaseUrl();
 
         TextView titleTxt = findViewById(R.id.textView3);
+        TextView textView22 = findViewById(R.id.textView22);
         TextView descriptionTxt = findViewById(R.id.textView254);
         ImageView imageView = findViewById(R.id.imageView18);
         String imageUrl = BASE_URL+img; // URL of the image
         Picasso.get().load(imageUrl).into(imageView);
 
         titleTxt.setText(title);
+        textView22.setText(title);
         descriptionTxt.setText(description);
     }
 }
