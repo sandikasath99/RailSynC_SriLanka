@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,13 +16,14 @@ import java.util.ArrayList;
 
 import uk.ac.wlv.railsyncsrilanka.News_View;
 import uk.ac.wlv.railsyncsrilanka.R;
+import uk.ac.wlv.railsyncsrilanka.api.RetrofitClient;
 import uk.ac.wlv.railsyncsrilanka.model.NewsModel;
-
+import com.squareup.picasso.Picasso;
 public class NewsAdapter  extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
     private ArrayList<NewsModel> newses;
     private Context context;
-
+    private String BASE_URL;
     public NewsAdapter(ArrayList<NewsModel> newses, Context context) {
         this.newses = newses;
         this.context = context;
@@ -40,6 +42,11 @@ public class NewsAdapter  extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         NewsModel newsModel= newses.get(position);
         holder.newsTitle.setText(newsModel.getTitle());
         holder.description.setText(newsModel.getDescription());
+
+        BASE_URL = RetrofitClient.getBaseUrl();
+        String imageUrl = BASE_URL+newsModel.getImg_path();
+
+        Picasso.get().load(imageUrl).into(holder.news_img);
 
         holder.news.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +68,7 @@ public class NewsAdapter  extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView newsTitle;
         TextView description;
-
+ImageView news_img;
         CardView news;
 
         public ViewHolder(@NonNull View itemView) {
@@ -69,6 +76,7 @@ public class NewsAdapter  extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
             newsTitle = itemView.findViewById(R.id.newsTitle);
             description = itemView.findViewById(R.id.description);
             news = itemView.findViewById(R.id.news);
+            news_img = itemView.findViewById(R.id.news_img);
 
         }
     }
