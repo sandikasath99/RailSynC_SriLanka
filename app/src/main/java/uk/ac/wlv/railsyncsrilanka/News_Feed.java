@@ -55,7 +55,6 @@ public class News_Feed extends AppCompatActivity {
                 if (response.isSuccessful()){
                     newsModels=response.body();
 
-
                     if(newsModels!=null){
                         NewsAdapter newsAdapter = new NewsAdapter(newsModels,News_Feed.this);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(News_Feed.this);
