@@ -60,7 +60,7 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<StationModel>>() {
             @Override
             public void onResponse(Call<ArrayList<StationModel>> call, Response<ArrayList<StationModel>> response) {
-                Toast.makeText(TrainSchedule_Mainline.this, "Succes", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TrainSchedule_Mainline.this, "Success", Toast.LENGTH_SHORT).show();
                 stationModels=response.body();
 
                 // Initialize the items array
