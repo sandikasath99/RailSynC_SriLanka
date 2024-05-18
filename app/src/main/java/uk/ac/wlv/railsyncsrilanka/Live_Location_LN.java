@@ -1,6 +1,9 @@
 package uk.ac.wlv.railsyncsrilanka;
 
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -9,12 +12,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,16 +48,23 @@ import retrofit2.Retrofit;
 import uk.ac.wlv.railsyncsrilanka.api.MyApiCall;
 import uk.ac.wlv.railsyncsrilanka.api.RetrofitClient;
 import uk.ac.wlv.railsyncsrilanka.model.StationModel;
+import uk.ac.wlv.railsyncsrilanka.model.TrainLocationModel;
 import uk.ac.wlv.railsyncsrilanka.model.TrainModel;
 
-public class Live_Location_LN extends AppCompatActivity {
+public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCallback{
 
     private MyApiCall myApiCall;
     private ArrayList<StationModel> stationModels;
     private ArrayList<TrainModel> trainModels;
     ArrayAdapter<String> adapterItems,adapterItems2;
     AutoCompleteTextView autoCompleteTxt,autoCompleteTxt2;
-    private String station,train;
+    private String station,train,latitude,longitude,tspeed;
+    private DatabaseReference mDatabase;
+    private GoogleMap map;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Marker marker_current;
+
 
     TextView yourStation,arivalTime,speed;
 
@@ -49,6 +81,9 @@ public class Live_Location_LN extends AppCompatActivity {
         });
 
         String line = getIntent().getExtras().getString("line");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mDatabase = database.getReference();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         Retrofit retrofitClient = RetrofitClient.getClient();
 
@@ -140,6 +175,79 @@ public class Live_Location_LN extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.track).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDatabase.child("location").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("firebase", "Error getting data", task.getException());
+                        } else {
+                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                            String input=String.valueOf(task.getResult().getValue());
+                            input = input.substring(1, input.length() - 1);
+                            String[] keyValuePairs = input.split(", ");
+                            Map<String, String> map = new HashMap<>();
+                            for (String pair : keyValuePairs) {
+                                // Split each pair by the equals sign
+                                String[] entry = pair.split("=");
+                                map.put(entry[0], entry[1]);
+                            }
+                            Toast.makeText(Live_Location_LN.this,map.get("speed"), Toast.LENGTH_SHORT).show();
+                            latitude=map.get("latitude");
+                            longitude=map.get("longitude");
+                            tspeed=map.get("speed");
 
+                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                            mapFragment.getMapAsync((OnMapReadyCallback) Live_Location_LN.this);
+
+                        }
+                    }
+                });
+
+            }
+        });
+
+    }
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+        map.getUiSettings().setZoomControlsEnabled(true);
+
+        if (checkPermissions()) {
+            map.setMyLocationEnabled(true);
+            setDeliverLocation();
+        } else {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+    }
+
+
+    private boolean checkPermissions() {
+        boolean permission = false;
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            permission = true;
+        }
+
+        return permission;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void setDeliverLocation() {
+        if (checkPermissions()) {
+            LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+            MarkerOptions options = new MarkerOptions().title("Deliver Location").position(latLng);
+            marker_current = map.addMarker(options);
+            moveCamera(latLng);
+        }
+    }
+
+    public void moveCamera(LatLng latLng) {
+        CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(15f).build();
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        map.animateCamera(cameraUpdate);
     }
 }

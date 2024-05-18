@@ -47,6 +47,8 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation("com.google.firebase:firebase-analytics")
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation ("com.google.firebase:firebase-database:20.0.5")
+    implementation ("com.google.firebase:firebase-analytics:21.0.0")
 
     // Map
     implementation ("com.google.android.gms:play-services-maps:18.2.0")
