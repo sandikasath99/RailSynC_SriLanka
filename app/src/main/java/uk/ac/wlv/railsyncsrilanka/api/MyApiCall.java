@@ -35,4 +35,8 @@ public interface MyApiCall {
     @FormUrlEncoded
     @POST("getLineTrains.php")
     Call<ArrayList<TrainModel>> getTrainsByLines(@Field("line") String line,@Field("station") String station);
+
+    @FormUrlEncoded
+    @POST("getStationLocation.php")
+    Call<ArrayList<StationModel>> getStationLocation(@Field("station") String station);
 }

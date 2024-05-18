@@ -4,14 +4,26 @@ public class StationModel {
     private String id;
     private String name;
     private String train_line_id;
+    private String lan;
+    private String lon;
 
     public StationModel() {
     }
 
-    public StationModel(String id, String name, String train_line_id) {
+    public StationModel(String id, String name, String train_line_id, String lan, String lon) {
         this.id = id;
         this.name = name;
         this.train_line_id = train_line_id;
+        this.lan = lan;
+        this.lon = lon;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
     }
 
     public String getId() {
@@ -36,5 +48,13 @@ public class StationModel {
 
     public void setTrain_line_id(String train_line_id) {
         this.train_line_id = train_line_id;
+    }
+
+    public String getLan() {
+        return lan;
+    }
+
+    public void setLan(String lan) {
+        this.lan = lan;
     }
 }

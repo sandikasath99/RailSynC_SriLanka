@@ -29,6 +29,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -51,14 +53,15 @@ import uk.ac.wlv.railsyncsrilanka.model.StationModel;
 import uk.ac.wlv.railsyncsrilanka.model.TrainLocationModel;
 import uk.ac.wlv.railsyncsrilanka.model.TrainModel;
 
-public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCallback{
+public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCallback {
 
     private MyApiCall myApiCall;
     private ArrayList<StationModel> stationModels;
+    private ArrayList<StationModel> stationLocationModels;
     private ArrayList<TrainModel> trainModels;
-    ArrayAdapter<String> adapterItems,adapterItems2;
-    AutoCompleteTextView autoCompleteTxt,autoCompleteTxt2;
-    private String station,train,latitude,longitude,tspeed;
+    ArrayAdapter<String> adapterItems, adapterItems2;
+    AutoCompleteTextView autoCompleteTxt, autoCompleteTxt2;
+    private String station, train, latitude, longitude, tspeed, stationLatitude, stationLongitude;
     private DatabaseReference mDatabase;
     private GoogleMap map;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
@@ -66,7 +69,11 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
     private Marker marker_current;
 
 
-    TextView yourStation,arivalTime,speed;
+    private LatLng location1;
+    private LatLng location2;
+
+
+    TextView yourStation, arivalTime, speed;
 
 
     @Override
@@ -94,14 +101,14 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         arivalTime = findViewById(R.id.arivalTime);
         speed = findViewById(R.id.speed);
 
-        myApiCall=retrofitClient.create(MyApiCall.class);
+        myApiCall = retrofitClient.create(MyApiCall.class);
         Call<ArrayList<StationModel>> callStation = myApiCall.getStationsByLine(line);
 
         callStation.enqueue(new Callback<ArrayList<StationModel>>() {
             @Override
             public void onResponse(Call<ArrayList<StationModel>> call, Response<ArrayList<StationModel>> response) {
                 Toast.makeText(Live_Location_LN.this, "Success", Toast.LENGTH_SHORT).show();
-                stationModels=response.body();
+                stationModels = response.body();
 
                 // Initialize the items array
                 String[] items = new String[stationModels.size()];
@@ -113,7 +120,7 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                     items[i] = stationModel.getName();
                 }
 
-                adapterItems = new ArrayAdapter<String>(Live_Location_LN.this, R.layout.list_item,items);
+                adapterItems = new ArrayAdapter<String>(Live_Location_LN.this, R.layout.list_item, items);
                 autoCompleteTxt.setAdapter(adapterItems);
 
             }
@@ -124,7 +131,7 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
-        autoCompleteTxt.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        autoCompleteTxt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
@@ -133,13 +140,39 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                 findViewById(R.id.a).setEnabled(true);
                 yourStation.setText(item);
 
+                //
+                Call<ArrayList<StationModel>> callLocation = myApiCall.getStationLocation(item);
+                callLocation.enqueue(new Callback<ArrayList<StationModel>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<StationModel>> call, Response<ArrayList<StationModel>> response) {
+                        Toast.makeText(Live_Location_LN.this, "Success", Toast.LENGTH_SHORT).show();
+                        stationLocationModels = response.body();
 
-                Call<ArrayList<TrainModel>> callTrain = myApiCall.getTrainsByLines(line,item);
+                        // Initialize the items array
+                        String[] items1 = new String[stationLocationModels.size()];
+
+                        // Get the current StationItem object
+                        StationModel stationModel = stationLocationModels.get(0);
+                        stationLongitude = stationModel.getLon();
+                        stationLatitude = stationModel.getLan();
+
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<StationModel>> call, Throwable t) {
+                        Toast.makeText(Live_Location_LN.this, "Fail3", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //train load
+                Call<ArrayList<TrainModel>> callTrain = myApiCall.getTrainsByLines(line, item);
 
                 callTrain.enqueue(new Callback<ArrayList<TrainModel>>() {
                     @Override
                     public void onResponse(Call<ArrayList<TrainModel>> call, Response<ArrayList<TrainModel>> response) {
-                        trainModels=response.body();
+                        trainModels = response.body();
 
                         // Initialize the items array
                         String[] items = new String[trainModels.size()];
@@ -152,7 +185,7 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                         }
 
 
-                        adapterItems2 = new ArrayAdapter<String>(Live_Location_LN.this, R.layout.list_item,items);
+                        adapterItems2 = new ArrayAdapter<String>(Live_Location_LN.this, R.layout.list_item, items);
                         autoCompleteTxt2.setAdapter(adapterItems2);
 
                     }
@@ -166,7 +199,7 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
-        autoCompleteTxt2.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        autoCompleteTxt2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
@@ -185,7 +218,7 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                             Log.e("firebase", "Error getting data", task.getException());
                         } else {
                             Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                            String input=String.valueOf(task.getResult().getValue());
+                            String input = String.valueOf(task.getResult().getValue());
                             input = input.substring(1, input.length() - 1);
                             String[] keyValuePairs = input.split(", ");
                             Map<String, String> map = new HashMap<>();
@@ -194,10 +227,10 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                                 String[] entry = pair.split("=");
                                 map.put(entry[0], entry[1]);
                             }
-                            Toast.makeText(Live_Location_LN.this,map.get("speed"), Toast.LENGTH_SHORT).show();
-                            latitude=map.get("latitude");
-                            longitude=map.get("longitude");
-                            tspeed=map.get("speed");
+                            Toast.makeText(Live_Location_LN.this, map.get("speed"), Toast.LENGTH_SHORT).show();
+                            latitude = map.get("latitude");
+                            longitude = map.get("longitude");
+                            tspeed = map.get("speed");
 
                             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                             mapFragment.getMapAsync((OnMapReadyCallback) Live_Location_LN.this);
@@ -210,44 +243,77 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         });
 
     }
+
+//    @Override
+//    public void onMapReady(@NonNull GoogleMap googleMap) {
+//        map = googleMap;
+//        map.getUiSettings().setZoomControlsEnabled(true);
+//
+//        if (checkPermissions()) {
+//            map.setMyLocationEnabled(true);
+//            setDeliverLocation();
+//        } else {
+//            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+//        }
+//
+//
+//
+//    }
+//
+//
+//    private boolean checkPermissions() {
+//        boolean permission = false;
+//        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            permission = true;
+//        }
+//
+//        return permission;
+//    }
+//
+//    @SuppressLint("MissingPermission")
+//    private void setDeliverLocation() {
+//        if (checkPermissions()) {
+//            LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+//            MarkerOptions options = new MarkerOptions().title("Deliver Location").position(latLng);
+//            marker_current = map.addMarker(options);
+//            moveCamera(latLng);
+//        }
+//    }
+//
+//    public void moveCamera(LatLng latLng) {
+//        CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(15f).build();
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+//        map.animateCamera(cameraUpdate);
+//    }
+
+
+    ////////////////////
+
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.getUiSettings().setZoomControlsEnabled(true);
 
-        if (checkPermissions()) {
-            map.setMyLocationEnabled(true);
-            setDeliverLocation();
-        } else {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }
+        location1 = new LatLng(Double.parseDouble(latitude) ,Double.parseDouble(longitude));
+        location2 = new LatLng(Double.parseDouble(stationLatitude) ,Double.parseDouble(stationLongitude));
 
+
+        // Add markers for the locations
+        map.addMarker(new MarkerOptions().position(location1).title("Start Location"));
+        map.addMarker(new MarkerOptions().position(location2).title("End Location"));
+
+
+        // Draw a polyline between the locations
+        Polyline polyline = map.addPolyline(new PolylineOptions()
+                .add(location1, location2)
+                .width(5)
+                .color(android.graphics.Color.RED));
+
+        // Move the camera to show both points
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
     }
 
 
-    private boolean checkPermissions() {
-        boolean permission = false;
-        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            permission = true;
-        }
 
-        return permission;
-    }
-
-    @SuppressLint("MissingPermission")
-    private void setDeliverLocation() {
-        if (checkPermissions()) {
-            LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
-            MarkerOptions options = new MarkerOptions().title("Deliver Location").position(latLng);
-            marker_current = map.addMarker(options);
-            moveCamera(latLng);
-        }
-    }
-
-    public void moveCamera(LatLng latLng) {
-        CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(15f).build();
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-        map.animateCamera(cameraUpdate);
-    }
+    /////////////
 }
