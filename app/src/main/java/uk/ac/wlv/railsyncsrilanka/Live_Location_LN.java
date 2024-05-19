@@ -3,6 +3,8 @@ package uk.ac.wlv.railsyncsrilanka;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,15 +40,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import uk.ac.wlv.railsyncsrilanka.api.MyApiCall;
 import uk.ac.wlv.railsyncsrilanka.api.RetrofitClient;
 import uk.ac.wlv.railsyncsrilanka.model.StationModel;
@@ -68,7 +75,7 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Marker marker_current;
 
-
+    private Polyline polyline;
     private LatLng location1;
     private LatLng location2;
 
@@ -244,6 +251,8 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
 
     }
 
+
+
 //    @Override
 //    public void onMapReady(@NonNull GoogleMap googleMap) {
 //        map = googleMap;
@@ -302,17 +311,68 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         map.addMarker(new MarkerOptions().position(location1).title("Start Location"));
         map.addMarker(new MarkerOptions().position(location2).title("End Location"));
 
+        getDirection(location1,location2);
+
 
         // Draw a polyline between the locations
-        Polyline polyline = map.addPolyline(new PolylineOptions()
-                .add(location1, location2)
-                .width(5)
-                .color(android.graphics.Color.RED));
+//        Polyline polyline = map.addPolyline(new PolylineOptions()
+//                .add(location1, location2)
+//                .width(5)
+//                .color(android.graphics.Color.RED));
 
         // Move the camera to show both points
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
     }
 
+    public void getDirection(LatLng start, LatLng end){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/directions/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MyApiCall directionApi = retrofit.create(MyApiCall.class);
+
+        String origin = start.latitude+","+start.longitude;
+        String destination = end.latitude+","+end.longitude;
+        String key = "AIzaSyD0r791UYBakMETL5fk5S3QD3W_hwiEZWk";
+
+        Call<JsonObject> apiJson = directionApi.getJson(origin, destination, true, key);
+        apiJson.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject body = response.body();
+                JsonArray routes = body.getAsJsonArray("routes");
+
+                JsonObject route = routes.get(0).getAsJsonObject();
+                JsonObject overviewPolyline = route.getAsJsonObject("overview_polyline");
+
+                List<LatLng> points = PolyUtil.decode(overviewPolyline.get("points").getAsString());
+
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (polyline == null) {
+                            PolylineOptions polylineOptions = new PolylineOptions();
+                            polylineOptions.width(20);
+                            polylineOptions.color(getColor(android.R.color.holo_blue_dark));
+                            polylineOptions.addAll(points);
+                            polyline = map.addPolyline(polylineOptions);
+                        }else {
+                            polyline.setPoints(points);
+                        }
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
 
 
     /////////////

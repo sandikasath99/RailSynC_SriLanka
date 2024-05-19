@@ -1,5 +1,7 @@
 package uk.ac.wlv.railsyncsrilanka.api;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -7,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import uk.ac.wlv.railsyncsrilanka.model.NewsModel;
 import uk.ac.wlv.railsyncsrilanka.model.StationModel;
 import uk.ac.wlv.railsyncsrilanka.model.TicketPriceModel;
@@ -39,4 +42,8 @@ public interface MyApiCall {
     @FormUrlEncoded
     @POST("getStationLocation.php")
     Call<ArrayList<StationModel>> getStationLocation(@Field("station") String station);
+
+    @GET("json")
+    Call<JsonObject> getJson(@Query("origin") String origin, @Query("destination") String destination,
+                             @Query("alternatives") boolean alternatives, @Query("key") String key);
 }
