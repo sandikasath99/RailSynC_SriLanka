@@ -27,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -43,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.maps.android.PolyUtil;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,7 +166,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                         stationLatitude = stationModel.getLan();
 
 
-
                     }
 
                     @Override
@@ -234,13 +235,20 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                                 String[] entry = pair.split("=");
                                 map.put(entry[0], entry[1]);
                             }
-                            Toast.makeText(Live_Location_LN.this, map.get("speed"), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Live_Location_LN.this, map.get("speed"), Toast.LENGTH_SHORT).show();
                             latitude = map.get("latitude");
                             longitude = map.get("longitude");
                             tspeed = map.get("speed");
+                            TextView speedtxt = findViewById(R.id.speed);
+                            speedtxt.setText(tspeed+" Km/h");
 
-                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                            mapFragment.getMapAsync((OnMapReadyCallback) Live_Location_LN.this);
+                            if (train.equals("Yaldewi")) {
+                                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                                mapFragment.getMapAsync((OnMapReadyCallback) Live_Location_LN.this);
+                            } else {
+                                Toast.makeText(Live_Location_LN.this, "This Train Has No Tracking Option", Toast.LENGTH_SHORT).show();
+
+                            }
 
                         }
                     }
@@ -250,7 +258,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         });
 
     }
-
 
 
 //    @Override
@@ -303,28 +310,31 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        location1 = new LatLng(Double.parseDouble(latitude) ,Double.parseDouble(longitude));
-        location2 = new LatLng(Double.parseDouble(stationLatitude) ,Double.parseDouble(stationLongitude));
+        location1 = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        location2 = new LatLng(Double.parseDouble(stationLatitude), Double.parseDouble(stationLongitude));
+
 
 
         // Add markers for the locations
-        map.addMarker(new MarkerOptions().position(location1).title("Start Location"));
+        //map.addMarker(new MarkerOptions().position(location1).title("Start Location"));
         map.addMarker(new MarkerOptions().position(location2).title("End Location"));
+        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.tracicon)).position(location1).title("Start Location"));
 
-        getDirection(location1,location2);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        getDirection(location1, location2);
 
 
-        // Draw a polyline between the locations
+        //Draw a polyline between the locations
 //        Polyline polyline = map.addPolyline(new PolylineOptions()
 //                .add(location1, location2)
 //                .width(5)
 //                .color(android.graphics.Color.RED));
 
-        // Move the camera to show both points
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
+        //Move the camera to show both points
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
     }
 
-    public void getDirection(LatLng start, LatLng end){
+    public void getDirection(LatLng start, LatLng end) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/maps/api/directions/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -332,9 +342,9 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
 
         MyApiCall directionApi = retrofit.create(MyApiCall.class);
 
-        String origin = start.latitude+","+start.longitude;
-        String destination = end.latitude+","+end.longitude;
-        String key = "AIzaSyD0r791UYBakMETL5fk5S3QD3W_hwiEZWk";
+        String origin = start.latitude + "," + start.longitude;
+        String destination = end.latitude + "," + end.longitude;
+        String key = "AIzaSyDIqwwakLqANB1IY2tTlXJvlOb9sObHmTM";
 
         Call<JsonObject> apiJson = directionApi.getJson(origin, destination, true, key);
         apiJson.enqueue(new Callback<JsonObject>() {
@@ -358,7 +368,13 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                             polylineOptions.color(getColor(android.R.color.holo_blue_dark));
                             polylineOptions.addAll(points);
                             polyline = map.addPolyline(polylineOptions);
-                        }else {
+                            double distance = calculatePolylineDistance(polyline);
+                            double trainspeed = Double.parseDouble(tspeed);
+                            double arivvaltime = ((distance / 1000) / trainspeed) * 60;
+                            int arrivaltimeint = (int) Math.round(arivvaltime);
+                            TextView arivalTime = findViewById(R.id.arivalTime);
+                            arivalTime.setText(String.valueOf(arrivaltimeint) + " Min");
+                        } else {
                             polyline.setPoints(points);
                         }
                     }
@@ -374,6 +390,17 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
+    private double calculatePolylineDistance(Polyline polyline) {
+        List<LatLng> points = polyline.getPoints();
+        double totalDistance = 0;
 
-    /////////////
+        for (int i = 0; i < points.size() - 1; i++) {
+            LatLng point1 = points.get(i);
+            LatLng point2 = points.get(i + 1);
+            totalDistance += SphericalUtil.computeDistanceBetween(point1, point2);
+        }
+
+        return totalDistance;
+    }
+
 }
