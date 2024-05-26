@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".Live_Location">
 
     <ImageView
@@ -132,6 +133,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="#80FFFFFF"
                         android:clickable="true"
+                        app:cardBackgroundColor="#99424242"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="20dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -186,6 +188,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="#80FFFFFF"
                         android:clickable="true"
+                        app:cardBackgroundColor="#99424242"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="20dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -240,6 +243,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="#80FFFFFF"
                         android:clickable="true"
+                        app:cardBackgroundColor="#99424242"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="20dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -294,6 +298,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="#80FFFFFF"
                         android:clickable="true"
+                        app:cardBackgroundColor="#99424242"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="20dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -348,6 +353,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="#80FFFFFF"
                         android:clickable="true"
+                        app:cardBackgroundColor="#99424242"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="20dp"
                         tools:ignore="SpeakableTextPresentCheck">

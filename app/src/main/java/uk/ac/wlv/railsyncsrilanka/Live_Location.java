@@ -7,12 +7,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import uk.ac.wlv.railsyncsrilanka.SeatBooking.Seat_Booking;
+
 public class Live_Location extends AppCompatActivity {
     public CardView back, mainline, northernline, easternline, coastalline, kelanivallyline;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_location);
+
+        back=findViewById(R.id.BKFSM);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Live_Location.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mainline=findViewById(R.id.ML);
         mainline.setOnClickListener(new View.OnClickListener() {

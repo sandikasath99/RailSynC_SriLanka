@@ -131,7 +131,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -264,7 +264,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -397,7 +397,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -530,7 +530,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -663,7 +663,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -796,7 +796,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -929,7 +929,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -1062,7 +1062,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -1195,7 +1195,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -1328,7 +1328,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -1461,7 +1461,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -1594,7 +1594,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -1727,7 +1727,7 @@
                         android:layout_height="120dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="#80FFFFFF"
+                        app:cardBackgroundColor="#99424242"
                         android:clickable="true"
                         app:cardCornerRadius="10dp"
                         tools:ignore="SpeakableTextPresentCheck">
