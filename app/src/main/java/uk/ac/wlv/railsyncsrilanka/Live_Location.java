@@ -31,6 +31,7 @@ public class Live_Location extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Live_Location.this, Live_Location_LN.class);
                 intent.putExtra("line","1");
+                intent.putExtra("title","Main Line");
                 startActivity(intent);
             }
         });
@@ -40,6 +41,7 @@ public class Live_Location extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Live_Location.this, Live_Location_LN.class);
                 intent.putExtra("line","2");
+                intent.putExtra("title","Northern Line");
                 startActivity(intent);
             }
         });
@@ -49,6 +51,7 @@ public class Live_Location extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Live_Location.this, Live_Location_LN.class);
                 intent.putExtra("line","3");
+                intent.putExtra("title","Eastern Line");
                 startActivity(intent);
             }
         });
@@ -58,6 +61,7 @@ public class Live_Location extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Live_Location.this, Live_Location_LN.class);
                 intent.putExtra("line","4");
+                intent.putExtra("title","Coastal Line");
                 startActivity(intent);
             }
         });
@@ -67,6 +71,7 @@ public class Live_Location extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Live_Location.this, Live_Location_LN.class);
                 intent.putExtra("line","5");
+                intent.putExtra("title","Kelani Valley Line");
                 startActivity(intent);
             }
         });
