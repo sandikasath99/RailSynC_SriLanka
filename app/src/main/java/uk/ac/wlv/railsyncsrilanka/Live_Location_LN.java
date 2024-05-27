@@ -96,7 +96,14 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
             return insets;
         });
 
+
+        String title = getIntent().getExtras().getString("title");
         String line = getIntent().getExtras().getString("line");
+
+        TextView textView22 = findViewById(R.id.textView22);
+        textView22.setText(title);
+
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
