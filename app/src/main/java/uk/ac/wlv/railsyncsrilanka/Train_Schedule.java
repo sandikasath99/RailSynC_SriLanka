@@ -34,6 +34,7 @@ public class Train_Schedule extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Train_Schedule.this, TrainSchedule_Mainline.class);
                 intent.putExtra("line","1");
+                intent.putExtra("title","Main Line");
                 startActivity(intent);
             }
         });
@@ -43,6 +44,7 @@ public class Train_Schedule extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Train_Schedule.this, TrainSchedule_Mainline.class);
                 intent.putExtra("line","2");
+                intent.putExtra("title","Northern Line");
                 startActivity(intent);
             }
         });
@@ -52,6 +54,7 @@ public class Train_Schedule extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Train_Schedule.this, TrainSchedule_Mainline.class);
                 intent.putExtra("line","3");
+                intent.putExtra("title","Eastern Line");
                 startActivity(intent);
             }
         });
@@ -61,6 +64,7 @@ public class Train_Schedule extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Train_Schedule.this, TrainSchedule_Mainline.class);
                 intent.putExtra("line","4");
+                intent.putExtra("title","Coastal Line");
                 startActivity(intent);
             }
         });
@@ -70,6 +74,7 @@ public class Train_Schedule extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Train_Schedule.this, TrainSchedule_Mainline.class);
                 intent.putExtra("line","5");
+                intent.putExtra("title","Kelani Valley Line");
                 startActivity(intent);
             }
         });

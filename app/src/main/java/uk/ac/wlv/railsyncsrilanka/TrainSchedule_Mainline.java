@@ -47,7 +47,11 @@ public class TrainSchedule_Mainline extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_schedule_mainline);
 
+        String title = getIntent().getExtras().getString("title");
         String line = getIntent().getExtras().getString("line");
+
+        TextView textView22 = findViewById(R.id.textView22);
+        textView22.setText(title +" Train Schedule");
 
         Retrofit retrofitClient = RetrofitClient.getClient();
 
