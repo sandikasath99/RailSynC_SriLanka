@@ -265,53 +265,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-
-//    @Override
-//    public void onMapReady(@NonNull GoogleMap googleMap) {
-//        map = googleMap;
-//        map.getUiSettings().setZoomControlsEnabled(true);
-//
-//        if (checkPermissions()) {
-//            map.setMyLocationEnabled(true);
-//            setDeliverLocation();
-//        } else {
-//            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-//        }
-//
-//
-//
-//    }
-//
-//
-//    private boolean checkPermissions() {
-//        boolean permission = false;
-//        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            permission = true;
-//        }
-//
-//        return permission;
-//    }
-//
-//    @SuppressLint("MissingPermission")
-//    private void setDeliverLocation() {
-//        if (checkPermissions()) {
-//            LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
-//            MarkerOptions options = new MarkerOptions().title("Deliver Location").position(latLng);
-//            marker_current = map.addMarker(options);
-//            moveCamera(latLng);
-//        }
-//    }
-//
-//    public void moveCamera(LatLng latLng) {
-//        CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(15f).build();
-//
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-//        map.animateCamera(cameraUpdate);
-//    }
-
-
-    ////////////////////
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -319,24 +272,12 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         location1 = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
         location2 = new LatLng(Double.parseDouble(stationLatitude), Double.parseDouble(stationLongitude));
 
-
-
-        // Add markers for the locations
-        //map.addMarker(new MarkerOptions().position(location1).title("Start Location"));
         map.addMarker(new MarkerOptions().position(location2).title("End Location"));
         map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.tracicon)).position(location1).title("Start Location"));
 
         map.getUiSettings().setZoomControlsEnabled(true);
         getDirection(location1, location2);
 
-
-        //Draw a polyline between the locations
-//        Polyline polyline = map.addPolyline(new PolylineOptions()
-//                .add(location1, location2)
-//                .width(5)
-//                .color(android.graphics.Color.RED));
-
-        //Move the camera to show both points
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
     }
 
