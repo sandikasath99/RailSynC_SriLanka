@@ -50,6 +50,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,14 +79,12 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Marker marker_current;
-
+    private Marker currentLocationMarker; // Reference to the current location marker
     private Polyline polyline;
     private LatLng location1;
     private LatLng location2;
 
-
     TextView yourStation, arivalTime, speed;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
 
         String title = getIntent().getExtras().getString("title");
         String line = getIntent().getExtras().getString("line");
@@ -137,7 +137,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
 
                 adapterItems = new ArrayAdapter<String>(Live_Location_LN.this, R.layout.list_item, items);
                 autoCompleteTxt.setAdapter(adapterItems);
-
             }
 
             @Override
@@ -155,7 +154,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                 findViewById(R.id.a).setEnabled(true);
                 yourStation.setText(item);
 
-                //
                 Call<ArrayList<StationModel>> callLocation = myApiCall.getStationLocation(item);
                 callLocation.enqueue(new Callback<ArrayList<StationModel>>() {
                     @Override
@@ -163,15 +161,9 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                         Toast.makeText(Live_Location_LN.this, "Success", Toast.LENGTH_SHORT).show();
                         stationLocationModels = response.body();
 
-                        // Initialize the items array
-                        String[] items1 = new String[stationLocationModels.size()];
-
-                        // Get the current StationItem object
                         StationModel stationModel = stationLocationModels.get(0);
                         stationLongitude = stationModel.getLon();
                         stationLatitude = stationModel.getLan();
-
-
                     }
 
                     @Override
@@ -180,7 +172,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                     }
                 });
 
-                //train load
                 Call<ArrayList<TrainModel>> callTrain = myApiCall.getTrainsByLines(line, item);
 
                 callTrain.enqueue(new Callback<ArrayList<TrainModel>>() {
@@ -188,20 +179,15 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                     public void onResponse(Call<ArrayList<TrainModel>> call, Response<ArrayList<TrainModel>> response) {
                         trainModels = response.body();
 
-                        // Initialize the items array
                         String[] items = new String[trainModels.size()];
 
                         for (int i = 0; i < trainModels.size(); i++) {
-                            // Get the current StationItem object
                             TrainModel trainModel = trainModels.get(i);
-                            // Extract the name and store it in the array
                             items[i] = trainModel.getName();
                         }
 
-
                         adapterItems2 = new ArrayAdapter<String>(Live_Location_LN.this, R.layout.list_item, items);
                         autoCompleteTxt2.setAdapter(adapterItems2);
-
                     }
 
                     @Override
@@ -218,51 +204,50 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 train = item;
-
             }
         });
 
         findViewById(R.id.track).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.child("location").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                scheduler.scheduleAtFixedRate(new Runnable() {
                     @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e("firebase", "Error getting data", task.getException());
-                        } else {
-                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                            String input = String.valueOf(task.getResult().getValue());
-                            input = input.substring(1, input.length() - 1);
-                            String[] keyValuePairs = input.split(", ");
-                            Map<String, String> map = new HashMap<>();
-                            for (String pair : keyValuePairs) {
-                                // Split each pair by the equals sign
-                                String[] entry = pair.split("=");
-                                map.put(entry[0], entry[1]);
+                    public void run() {
+                        mDatabase.child("location").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("firebase", "Error getting data", task.getException());
+                                } else {
+                                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                                    String input = String.valueOf(task.getResult().getValue());
+                                    input = input.substring(1, input.length() - 1);
+                                    String[] keyValuePairs = input.split(", ");
+                                    Map<String, String> map = new HashMap<>();
+                                    for (String pair : keyValuePairs) {
+                                        String[] entry = pair.split("=");
+                                        map.put(entry[0], entry[1]);
+                                    }
+                                    latitude = map.get("latitude");
+                                    longitude = map.get("longitude");
+                                    tspeed = map.get("speed");
+                                    TextView speedtxt = findViewById(R.id.speed);
+                                    speedtxt.setText(tspeed + " Km/h");
+
+                                    if (train.equals("Yaldewi")) {
+                                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                                        mapFragment.getMapAsync((OnMapReadyCallback) Live_Location_LN.this);
+                                    } else {
+                                        Toast.makeText(Live_Location_LN.this, "This Train Has No Tracking Option", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
                             }
-                            //Toast.makeText(Live_Location_LN.this, map.get("speed"), Toast.LENGTH_SHORT).show();
-                            latitude = map.get("latitude");
-                            longitude = map.get("longitude");
-                            tspeed = map.get("speed");
-                            TextView speedtxt = findViewById(R.id.speed);
-                            speedtxt.setText(tspeed+" Km/h");
-
-                            if (train.equals("Yaldewi")) {
-                                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                                mapFragment.getMapAsync((OnMapReadyCallback) Live_Location_LN.this);
-                            } else {
-                                Toast.makeText(Live_Location_LN.this, "This Train Has No Tracking Option", Toast.LENGTH_SHORT).show();
-
-                            }
-
-                        }
+                        });
                     }
-                });
-
+                }, 0, 10, TimeUnit.SECONDS);
             }
         });
-
     }
 
     @Override
@@ -272,13 +257,19 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
         location1 = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
         location2 = new LatLng(Double.parseDouble(stationLatitude), Double.parseDouble(stationLongitude));
 
+        // Remove old marker if it exists
+        if (currentLocationMarker != null) {
+            currentLocationMarker.remove();
+        }
+
+        // Add new marker
+        currentLocationMarker = map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.tracicon)).position(location1).title("Start Location"));
         map.addMarker(new MarkerOptions().position(location2).title("End Location"));
-        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.tracicon)).position(location1).title("Start Location"));
 
         map.getUiSettings().setZoomControlsEnabled(true);
         getDirection(location1, location2);
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 10));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 15));
     }
 
     public void getDirection(LatLng start, LatLng end) {
@@ -305,7 +296,6 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
 
                 List<LatLng> points = PolyUtil.decode(overviewPolyline.get("points").getAsString());
 
-
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -315,39 +305,36 @@ public class Live_Location_LN extends AppCompatActivity implements OnMapReadyCal
                             polylineOptions.color(getColor(android.R.color.holo_blue_dark));
                             polylineOptions.addAll(points);
                             polyline = map.addPolyline(polylineOptions);
-                            double distance = calculatePolylineDistance(polyline);
-                            double trainspeed = Double.parseDouble(tspeed);
-                            double arivvaltime = ((distance / 1000) / trainspeed) * 60;
-                            int arrivaltimeint = (int) Math.round(arivvaltime);
-                            TextView arivalTime = findViewById(R.id.arivalTime);
-                            arivalTime.setText(String.valueOf(arrivaltimeint) + " Min");
                         } else {
                             polyline.setPoints(points);
                         }
+                        updateArrivalTime(points);
                     }
                 });
-
-
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
             }
         });
     }
 
-    private double calculatePolylineDistance(Polyline polyline) {
-        List<LatLng> points = polyline.getPoints();
-        double totalDistance = 0;
+    private void updateArrivalTime(List<LatLng> points) {
+        double distance = calculatePolylineDistance(points);
+        double trainspeed = Double.parseDouble(tspeed);
+        double arivvaltime = ((distance / 1000) / trainspeed) * 60;
+        int arrivaltimeint = (int) Math.round(arivvaltime);
+        TextView arivalTime = findViewById(R.id.arivalTime);
+        arivalTime.setText(String.valueOf(arrivaltimeint) + " Min");
+    }
 
+    private double calculatePolylineDistance(List<LatLng> points) {
+        double totalDistance = 0;
         for (int i = 0; i < points.size() - 1; i++) {
             LatLng point1 = points.get(i);
             LatLng point2 = points.get(i + 1);
             totalDistance += SphericalUtil.computeDistanceBetween(point1, point2);
         }
-
         return totalDistance;
     }
-
 }
